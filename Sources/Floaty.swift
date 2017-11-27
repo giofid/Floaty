@@ -703,17 +703,25 @@ open class Floaty: UIView {
     }
     
     fileprivate func setLeftBottomFrame(_ keyboardSize: CGFloat = 0) {
+        
+        var horizontalMargin = CGFloat(0)
+        var verticalMargin = size + keyboardSize
+        if #available(iOS 11, *) {
+            horizontalMargin += safeAreaInsets.left
+            verticalMargin += safeAreaInsets.bottom
+        }
+        
         if superview == nil {
             frame = CGRect(
-                x: 0,
-                y: (UIScreen.main.bounds.size.height - size - keyboardSize) - paddingY,
+                x: horizontalMargin,
+                y: (UIScreen.main.bounds.size.height - verticalMargin) - paddingY,
                 width: size,
                 height: size
             )
         } else {
             frame = CGRect(
-                x: 0,
-                y: (superview!.bounds.size.height-size-keyboardSize) - paddingY,
+                x: horizontalMargin,
+                y: (superview!.bounds.size.height - verticalMargin) - paddingY,
                 width: size,
                 height: size
             )
@@ -727,17 +735,25 @@ open class Floaty: UIView {
 
     
     fileprivate func setRightBottomFrame(_ keyboardSize: CGFloat = 0) {
+        
+        var horizontalMargin = size;
+        var verticalMargin = size + keyboardSize;
+        if #available(iOS 11, *) {
+            horizontalMargin += safeAreaInsets.right
+            verticalMargin += safeAreaInsets.bottom
+        }
+        
         if superview == nil {
             frame = CGRect(
-                x: (UIScreen.main.bounds.size.width - size) - paddingX,
-                y: (UIScreen.main.bounds.size.height - size - keyboardSize) - paddingY,
+                x: (UIScreen.main.bounds.size.width - horizontalMargin) - paddingX,
+                y: (UIScreen.main.bounds.size.height - verticalMargin) - paddingY,
                 width: size,
                 height: size
             )
         } else {
             frame = CGRect(
-                x: (superview!.bounds.size.width-size) - paddingX,
-                y: (superview!.bounds.size.height-size-keyboardSize) - paddingY,
+                x: (superview!.bounds.size.width-horizontalMargin) - paddingX,
+                y: (superview!.bounds.size.height-verticalMargin) - paddingY,
                 width: size,
                 height: size
             )
