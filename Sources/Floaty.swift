@@ -813,9 +813,15 @@ open class Floaty: UIView {
                 size = min(frame.size.width, frame.size.height)
             }
         } else if (object as? UIScrollView) == superview && keyPath == "contentOffset" {
+            var horizontalMargin = size
+            var verticalMargin = size
+            if #available(iOS 11, *) {
+                horizontalMargin += safeAreaInsets.right
+                verticalMargin += safeAreaInsets.bottom
+            }
             let scrollView = object as! UIScrollView
-            frame.origin.x = ((self.superview!.bounds.size.width - size) - paddingX) + scrollView.contentOffset.x
-            frame.origin.y = ((self.superview!.bounds.size.height - size) - paddingY) + scrollView.contentOffset.y
+            frame.origin.x = ((self.superview!.bounds.size.width - horizontalMargin) - paddingX) + scrollView.contentOffset.x
+            frame.origin.y = ((self.superview!.bounds.size.height - verticalMargin) - paddingY) + scrollView.contentOffset.y
         }
     }
 
