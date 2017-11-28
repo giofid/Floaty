@@ -703,25 +703,17 @@ open class Floaty: UIView {
     }
     
     fileprivate func setLeftBottomFrame(_ keyboardSize: CGFloat = 0) {
-        
-        var horizontalMargin = CGFloat(0)
-        var verticalMargin = size + keyboardSize
-        if #available(iOS 11, *) {
-            horizontalMargin += safeAreaInsets.left
-            verticalMargin += safeAreaInsets.bottom
-        }
-        
         if superview == nil {
             frame = CGRect(
-                x: horizontalMargin,
-                y: (UIScreen.main.bounds.size.height - verticalMargin) - paddingY,
+                x: 0,
+                y: (UIScreen.main.bounds.size.height - size - keyboardSize) - paddingY,
                 width: size,
                 height: size
             )
         } else {
             frame = CGRect(
-                x: horizontalMargin,
-                y: (superview!.bounds.size.height - verticalMargin) - paddingY,
+                x: 0,
+                y: (superview!.bounds.size.height-size-keyboardSize) - paddingY,
                 width: size,
                 height: size
             )
@@ -735,25 +727,17 @@ open class Floaty: UIView {
 
     
     fileprivate func setRightBottomFrame(_ keyboardSize: CGFloat = 0) {
-        
-        var horizontalMargin = size;
-        var verticalMargin = size + keyboardSize;
-        if #available(iOS 11, *) {
-            horizontalMargin += safeAreaInsets.right
-            verticalMargin += safeAreaInsets.bottom
-        }
-        
         if superview == nil {
             frame = CGRect(
-                x: (UIScreen.main.bounds.size.width - horizontalMargin) - paddingX,
-                y: (UIScreen.main.bounds.size.height - verticalMargin) - paddingY,
+                x: (UIScreen.main.bounds.size.width - size) - paddingX,
+                y: (UIScreen.main.bounds.size.height - size - keyboardSize) - paddingY,
                 width: size,
                 height: size
             )
         } else {
             frame = CGRect(
-                x: (superview!.bounds.size.width-horizontalMargin) - paddingX,
-                y: (superview!.bounds.size.height-verticalMargin) - paddingY,
+                x: (superview!.bounds.size.width-size) - paddingX,
+                y: (superview!.bounds.size.height-size-keyboardSize) - paddingY,
                 width: size,
                 height: size
             )
@@ -813,13 +797,14 @@ open class Floaty: UIView {
                 size = min(frame.size.width, frame.size.height)
             }
         } else if (object as? UIScrollView) == superview && keyPath == "contentOffset" {
+            let scrollView = object as! UIScrollView
+            
             var horizontalMargin = size
             var verticalMargin = size
             if #available(iOS 11, *) {
-                horizontalMargin += safeAreaInsets.right
-                verticalMargin += safeAreaInsets.bottom
+                horizontalMargin += scrollView.safeAreaInsets.right
+                verticalMargin += scrollView.safeAreaInsets.bottom
             }
-            let scrollView = object as! UIScrollView
             frame.origin.x = ((self.superview!.bounds.size.width - horizontalMargin) - paddingX) + scrollView.contentOffset.x
             frame.origin.y = ((self.superview!.bounds.size.height - verticalMargin) - paddingY) + scrollView.contentOffset.y
         }
