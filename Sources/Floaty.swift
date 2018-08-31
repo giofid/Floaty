@@ -749,14 +749,14 @@ open class Floaty: UIView {
     
     
     fileprivate func setRightBottomFrame(_ keyboardSize: CGFloat = 0) {
-
+        
         var horizontalMargin = size;
         var verticalMargin = size + keyboardSize;
         if #available(iOS 11, *) {
             horizontalMargin += safeAreaInsets.right
             verticalMargin += safeAreaInsets.bottom
         }
-
+        
         if superview == nil {
             frame = CGRect(
                 x: (UIScreen.main.bounds.size.width - horizontalMargin) - paddingX,
@@ -772,7 +772,7 @@ open class Floaty: UIView {
                 height: size
             )
         }
-
+        
         if friendlyTap == true {
             frame.size.width += paddingX
             frame.size.height += paddingY
@@ -826,7 +826,7 @@ open class Floaty: UIView {
             } else {
                 size = min(frame.size.width, frame.size.height)
             }
-        } else if (object as? UIScrollView) == superview && keyPath == "contentOffset" {
+        } else if (object as? UIScrollView) == superview && (keyPath == "contentOffset" || keyPath == "safeAreaInsets") {
             let scrollView = object as! UIScrollView
             
             var horizontalMargin = size
@@ -848,6 +848,7 @@ open class Floaty: UIView {
                 for superview in superviews {
                     if superview is UIScrollView {
                         superview.removeObserver(self, forKeyPath: "contentOffset", context:nil)
+                        superview.removeObserver(self, forKeyPath: "safeAreaInsets", context:nil)
                     }
                 }
             }
@@ -864,6 +865,7 @@ open class Floaty: UIView {
                 for superview in superviews {
                     if superview is UIScrollView {
                         superview.addObserver(self, forKeyPath: "contentOffset", options: .new, context:nil)
+                        superview.addObserver(self, forKeyPath: "safeAreaInsets", options: .new, context:nil)
                     }
                 }
             }
@@ -1247,4 +1249,3 @@ extension Floaty {
         }
     }
 }
-
